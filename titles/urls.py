@@ -4,9 +4,8 @@ from rest_framework_simplejwt.views import (TokenObtainPairView,
                                             TokenRefreshView)
 from titles import views
 
-
 router = DefaultRouter()
-router.register('v1/categories', views.APICategory, basename='api_category')
+# router.register('v1/categories', views.APICategory, basename='api_category')
 router.register('v1/genres', views.APIGenres, basename='api_genre')
 router.register('v1/titles', views.APITitles, basename='api_title')
 
@@ -14,6 +13,10 @@ app_name = 'titles'
 
 urlpatterns = [
     path('api/', include(router.urls)),
+    path('api/v1/categories/', views.APICategory.as_view(),
+         name='api_category'),
+    path('api/v1/categories/<slug>/', views.APICategoryDetail.as_view(),
+         name='api_category_detail'),
     path('v1/token/', TokenObtainPairView.as_view(),
          name='token_obtain_pair'),
     path('v1/token/refresh/', TokenRefreshView.as_view(),

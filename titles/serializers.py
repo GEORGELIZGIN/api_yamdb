@@ -10,7 +10,7 @@ User = get_user_model()
 class TitleSerializer(serializers.ModelSerializer):
 
     class Meta:
-        fields = ('id', 'name', 'year', 'category')
+        fields = '__all__'
         model = Title
 
 
@@ -20,6 +20,9 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ('name', 'slug')
         model = Category
         lookup_field = 'slug'
+        extra_kwargs = {
+            'url': {'lookup_field': 'slug'}
+        }
 
 
 class GenreSerializer(serializers.ModelSerializer):
