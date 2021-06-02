@@ -4,10 +4,10 @@ from titles.models import Category, Title, Genre
 from rest_framework import viewsets, filters
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import (IsAuthenticatedOrReadOnly,
-                                        IsAuthenticated)
+                                        IsAuthenticated, IsAdminUser)
 from .serializers import (TitleSerializer, CategorySerializer,
                           GenreSerializer)
-
+from .permissions import OwnerPermission
 
 class CategoriesList(generic.ListView):
     template_name = 'categories_list.html'
@@ -23,7 +23,7 @@ class CategoryDetails(generic.DetailView):
 
 class APICategory(viewsets.ModelViewSet):
     serializer_class = CategorySerializer
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+    permission_classes = (IsAuthenticatedOrReadOnly, OwnerPermission)
     queryset = Category.objects.all()
     lookup_field = 'slug'
     filter_backends = [filters.SearchFilter]
@@ -40,6 +40,9 @@ class APIGenres(viewsets.ModelViewSet):
     serializer_class = GenreSerializer
     permission_classes = (IsAuthenticatedOrReadOnly,)
     queryset = Genre.objects.all()
+    lookup_field = 'slug'
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name']
 
 
 class TitlesList(generic.ListView):
@@ -50,5 +53,8 @@ class TitlesList(generic.ListView):
 
 class APITitles(viewsets.ModelViewSet):
     serializer_class = TitleSerializer
-    permission_classes = (IsAuthenticatedOrReadOnly, IsAuthenticated)
+    permission_classes = (IsAuthenticatedOrReadOnly, OwnerPermission)
     queryset = Title.objects.all()
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)

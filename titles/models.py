@@ -10,7 +10,7 @@ class Category(models.Model):
                                       'понятная человеку')
 
     class Meta:
-        ordering = ('name', )
+        ordering = ('name',)
         verbose_name_plural = 'Категория'
 
     def __str__(self):
@@ -26,7 +26,7 @@ class Genre(models.Model):
                                       'понятная человеку')
 
     class Meta:
-        ordering = ('name', )
+        ordering = ('name',)
         verbose_name_plural = 'Жанр'
 
     def __str__(self):
@@ -39,9 +39,10 @@ class Title(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE,
                                  related_name='title',
                                  verbose_name='Категория')
+    genre = models.ManyToManyField(Genre, verbose_name='Жанр', blank=True)
 
     class Meta:
-        ordering = ('id', )
+        ordering = ('id',)
         verbose_name_plural = 'Название'
 
     def __str__(self):
