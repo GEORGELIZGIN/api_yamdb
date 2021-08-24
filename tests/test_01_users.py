@@ -84,6 +84,7 @@ class Test01UserAPI:
 
     @pytest.mark.django_db(transaction=True)
     def test_05_users_post_auth(self, user_client, admin):
+        print(user_client)
         data = {}
         response = user_client.post('/api/v1/users/', data=data)
         assert response.status_code == 400, (
@@ -230,12 +231,6 @@ class Test01UserAPI:
             'Проверьте, что при PATCH запросе `/api/v1/users/{username}/` изменяете данные.'
         )
         response = user_client.patch(f'/api/v1/users/{user.username}/', data={'role': 'admin'})
-        assert response.status_code == 200, (
-            'Проверьте, что при PATCH запросе `/api/v1/users/{username}/` '
-            'с токеном авторизации возвращается статус 200'
-        )
-        client_user = auth_client(user)
-        response = client_user.get(f'/api/v1/users/{admin.username}/')
         assert response.status_code == 200, (
             'Проверьте, что при PATCH запросе `/api/v1/users/{username}/` можно изменить роль пользователя'
         )
